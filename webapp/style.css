@@ -1,0 +1,33 @@
+
+/* ── STYLES GLOBAUX ───────────────────────────────────────── */
+body { font-family: Arial, sans-serif; background: #f5f5f5; margin: 20px; } /* Police Arial, fond gris clair, marge de 20px sur toute la page */
+
+/* ── PAGE DE CONNEXION (login.php) ───────────────────────── */
+.login-page { display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; } /* Flexbox : centre le formulaire horizontalement ET verticalement dans toute la hauteur de la fenêtre */
+.login-box { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.2); width: 320px; } /* Boîte blanche avec coins arrondis, ombre portée et largeur fixe de 320px */
+.login-box h2 { text-align: center; margin-bottom: 10px; } /* Titre "Connexion" centré avec un espace en dessous */
+.login-box input { width: 100%; padding: 8px; margin: 5px 0 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; } /* Champs email/mdp : pleine largeur, bordure grise, coins légèrement arrondis, box-sizing inclut le padding dans la largeur */
+.login-box button { width: 100%; padding: 10px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; } /* Bouton "Se connecter" : pleine largeur, fond bleu Bootstrap, texte blanc, curseur pointeur */
+.login-box button:hover { background: #0056b3; } /* Au survol de la souris : fond bleu plus foncé pour l'effet interactif */
+.erreur { color: red; text-align: center; } /* Message d'erreur de connexion : texte rouge centré */
+
+/* ── DASHBOARD — BARRE EN-TÊTE (index.php) ───────────────── */
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; } /* Flexbox : titre à gauche, nom+déconnexion à droite, alignés verticalement */
+.logout { color: red; text-decoration: none; } /* Lien "Déconnexion" en rouge sans soulignement */
+
+/* ── BANNIÈRE D'ALERTE ────────────────────────────────────── */
+.alerte-banner { background: #ff4444; color: white; padding: 12px; border-radius: 8px; text-align: center; font-size: 18px; font-weight: bold; margin-bottom: 15px; } /* Bandeau rouge vif pleine largeur, texte blanc en gras — visible uniquement si seuil dépassé */
+
+/* ── BLOC RMS EN DIRECT ───────────────────────────────────── */
+.rms-live { background: white; border-radius: 8px; padding: 20px; margin: 15px 0; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,0.1); } /* Carte blanche centrée avec ombre légère qui contient la valeur RMS en grand */
+.rms-valeur { font-size: 60px; font-weight: bold; } /* Valeur RMS affichée en très grand (60px) et en gras */
+.rms-ok { color: green; } /* RMS en vert quand la vibration est dans la norme (< 1.2g) */
+.rms-alerte { color: red; animation: clignote 1s infinite; } /* RMS en rouge ET clignotant quand le seuil est dépassé (>= 1.2g) */
+@keyframes clignote { 0%,100% { opacity:1; } 50% { opacity:0.3; } } /* Animation CSS : alterne entre opacité 100% et 30% toutes les 0.5s */
+
+/* ── TABLEAU DES MESURES ──────────────────────────────────── */
+table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.1); } /* Tableau pleine largeur, fond blanc, coins arrondis, ombre — border-collapse supprime les double-bordures */
+th { background: #007bff; color: white; padding: 10px; text-align: left; } /* En-têtes de colonnes : fond bleu, texte blanc, padding intérieur */
+td { padding: 10px; border-bottom: 1px solid #eee; } /* Cellules de données : padding et séparateur horizontal gris très clair */
+.badge-ok { background: #28a745; color: white; padding: 3px 8px; border-radius: 12px; font-size: 12px; } /* Badge "Normal" : pastille verte arrondie (style pill) */
+.badge-alerte { background: #dc3545; color: white; padding: 3px 8px; border-radius: 12px; font-size: 12px; } /* Badge "Alerte" : pastille rouge arrondie (même style que badge-ok) */
