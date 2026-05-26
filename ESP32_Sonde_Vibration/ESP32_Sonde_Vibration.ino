@@ -1,20 +1,20 @@
 // ── BIBLIOTHÈQUES ─────────────────────────────────────────
-#include <WiFi.h>              // Gère la connexion au réseau WiFi de l'ESP32
+#include <WiFi.h>              
 #include <WiFiClientSecure.h>  // Crée un socket TCP chiffré TLS 1.2 (nécessaire pour MQTTS)
-#include <PubSubClient.h>      // Client MQTT : permet de publier des messages sur un topic
+#include <PubSubClient.h>      
 #include <Wire.h>              // Protocole I2C : relie l'ESP32 au capteur ADXL345 sur GPIO21/22
 #include <Adafruit_Sensor.h>   // Couche Adafruit commune à tous les capteurs (interface unifiée)
 #include <Adafruit_ADXL345_U.h>// Pilote spécifique pour le capteur accéléromètre ADXL345
 #include "mbedtls/md.h"        // Bibliothèque crypto intégrée à l'ESP32 — fournit HMAC-SHA256
 
 // ── PARAMÈTRES RÉSEAU ET SÉCURITÉ ─────────────────────────
-const char* WIFI_SSID  = "BTS CIEL FIBRE 2.4";            // Nom du réseau WiFi (SSID)
-const char* WIFI_PASS  = "L0g4n123*";                     // Mot de passe du réseau WiFi
-const char* MQTT_HOST  = "10.1.40.15";                    // Adresse IP du serveur Mosquitto (Ubuntu)
-const char* MQTT_TOPIC = "vibration/rms";                 // Topic MQTT sur lequel publier les mesures
-const char* HMAC_KEY   = "ArcelorMittal_SecretKey_2026";  // Clé secrète partagée avec Node-RED pour HMAC
-const int   MQTT_PORT  = 8883;                            // Port MQTTS (MQTT over TLS) — différent du 1883 non chiffré
-const float SEUIL      = 1.2;                             // Seuil d'alerte en g (1.2× la pesanteur terrestre)
+const char* WIFI_SSID  = "BTS CIEL FIBRE 2.4";            
+const char* WIFI_PASS  = "L0g4n123*";                     
+const char* MQTT_HOST  = "10.1.40.15";                    
+const char* MQTT_TOPIC = "vibration/rms";                 
+const char* HMAC_KEY   = "ArcelorMittal_SecretKey_2026";  
+const int   MQTT_PORT  = 8883;                            
+const float SEUIL      = 1.2;                             
 
 // ── CERTIFICAT CA TLS ─────────────────────────────────────
 // Certificat de l'autorité de certification ArcelorMittal-CA (auto-signé)
@@ -72,9 +72,9 @@ String signer(String msg) {
     mbedtls_md_setup(&ctx, mbedtls_md_info_from_type(MBEDTLS_MD_SHA256), 1); // Configure SHA-256 en mode HMAC (1)
     mbedtls_md_hmac_starts(&ctx, (unsigned char*)HMAC_KEY, strlen(HMAC_KEY)); // Charge la clé secrète dans le contexte
     mbedtls_md_hmac_update(&ctx, (unsigned char*)msg.c_str(), msg.length());  // Traite le message à signer
-    mbedtls_md_hmac_finish(&ctx, res);             // Finalise le calcul — résultat dans res[]
-    mbedtls_md_free(&ctx);                         // Libère la mémoire du contexte
-    String h = "";                                 // Chaîne qui contiendra la signature en hexadécimal
+    mbedtls_md_hmac_finish(&ctx, res);             
+    mbedtls_md_free(&ctx);                         
+    String h = "";                                 
     for (int i=0; i<32; i++) {                     // Parcourt les 32 octets du résultat
         if (res[i] < 16) h += "0";                // Ajoute un zéro devant si l'octet est < 0x10 (padding)
         h += String(res[i], HEX);                 // Convertit l'octet en 2 caractères hexadécimaux
@@ -87,31 +87,31 @@ String signer(String msg) {
 // Formule : RMS = sqrt((Σax² + Σay² + Σaz²) / (3 × N)
 // ax, ay, az sont passés par référence pour être récupérés dans loop()
 float rms(float &ax, float &ay, float &az) {
-    float s = 0;                                   // Accumulateur de la somme des carrés (Σax² + Σay² + Σaz²)
-    sensors_event_t e;                             // Structure Adafruit qui reçoit les données du capteur
-    for (int i = 0; i < 100; i++) {               // Boucle 100 fois pour acquérir 100 échantillons
-        capteur.getEvent(&e);                      // Lit les accélérations X, Y, Z depuis l'ADXL345 (en m/s²)
-        ax = e.acceleration.x / 9.81;             // Convertit l'axe X de m/s² en g (1g = 9.81 m/s²)
-        ay = e.acceleration.y / 9.81;             // Convertit l'axe Y de m/s² en g
-        az = e.acceleration.z / 9.81;             // Convertit l'axe Z de m/s² en g (≈1g au repos = gravité)
-        s += ax*ax + ay*ay + az*az;               // Ajoute la somme des carrés des 3 axes à l'accumulateur
-        delay(5);                                  // Attend 5 ms → fréquence d'échantillonnage de 200 Hz
+    float s = 0;                                   
+    sensors_event_t e;                             
+    for (int i = 0; i < 100; i++) {               
+        capteur.getEvent(&e);                      
+        ax = e.acceleration.x / 9.81;             
+        ay = e.acceleration.y / 9.81;             
+        az = e.acceleration.z / 9.81;             
+        s += ax*ax + ay*ay + az*az;               
+        delay(5);                                  
     }
-    return sqrt(s / 100);                          // RMS = racine carrée de la moyenne des sommes de carrés
+    return sqrt(s / 100);                          
 }
 
 // ── SETUP : S'EXÉCUTE UNE SEULE FOIS AU DÉMARRAGE ─────────
 void setup() {
-    Serial.begin(115200);                          // Démarre le port série à 115200 bauds pour le débogage
-    Wire.begin(21, 22);                            // Initialise le bus I2C : SDA→GPIO21, SCL→GPIO22
-    if (!capteur.begin()) {                        // Tente d'initialiser le capteur ADXL345 en I2C
-        Serial.println("ADXL345 non detecte !"); // Si échec : affiche une erreur dans le moniteur série
+    Serial.begin(115200);                          
+    Wire.begin(21, 22);                            
+    if (!capteur.begin()) {                        
+        Serial.println("ADXL345 non detecte !");   // Si échec : affiche une erreur dans le moniteur série
         while(1);                                  // Bloque le programme (boucle infinie) — impossible de continuer
     }
     capteur.setRange(ADXL345_RANGE_4_G);           // Configure la plage de mesure à ±4g (équilibre précision/portée)
-    connecterWiFi();                               // Se connecte au réseau WiFi ArcelorMittal
-    wifiClient.setCACert(CA_CERT);                 // Charge le certificat CA pour authentifier le serveur TLS
-    mqtt.setServer(MQTT_HOST, MQTT_PORT);          // Configure l'adresse et le port du broker Mosquitto
+    connecterWiFi();                               
+    wifiClient.setCACert(CA_CERT);                 
+    mqtt.setServer(MQTT_HOST, MQTT_PORT);          
     mqtt.setBufferSize(768);                       // Augmente le buffer MQTT à 768 octets (payload JSON + HMAC)
     connecterMQTT();                               // Établit la connexion MQTT/TLS avec le broker
 }
@@ -124,13 +124,13 @@ void loop() {
     float ax, ay, az;                             // Déclare les variables pour stocker les derniers axes lus
     float r = rms(ax, ay, az);                    // Mesure le RMS sur 100 échantillons (500 ms de mesure)
     String json = "{\"rms\":"  + String(r, 4)     // Construit le JSON avec le RMS (4 décimales)
-                + ",\"x\":"   + String(ax, 3)     // Ajoute l'axe X en g (3 décimales)
-                + ",\"y\":"   + String(ay, 3)     // Ajoute l'axe Y en g
-                + ",\"z\":"   + String(az, 3)     // Ajoute l'axe Z en g
-                + "}";                             // Ferme l'objet JSON — ex: {"rms":0.9821,"x":0.01,"y":-0.02,"z":0.99}
+                + ",\"x\":"   + String(ax, 3)     
+                + ",\"y\":"   + String(ay, 3)     
+                + ",\"z\":"   + String(az, 3)     
+                + "}";                             
     String payload = json.substring(0, json.length()-1) // Supprime le dernier "}" pour insérer le champ hmac
                    + ",\"hmac\":\"" + signer(json) + "\"}"; // Ajoute la signature HMAC-SHA256 puis referme le JSON
     Serial.println("RMS=" + String(r,4) + (r >= SEUIL ? " ALERTE!" : " OK")); // Affiche le RMS et l'état dans le moniteur série
     mqtt.publish(MQTT_TOPIC, payload.c_str());     // Publie le payload JSON signé sur le topic MQTT via TLS
-    delay(2000);                                   // Attend 2 secondes avant la prochaine mesure
+    delay(2000);                                   
 }
