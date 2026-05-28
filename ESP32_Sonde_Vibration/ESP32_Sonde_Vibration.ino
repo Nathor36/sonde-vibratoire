@@ -49,8 +49,8 @@ PubSubClient mqtt(wifiClient);   // Client MQTT qui passe par le socket TLS (wif
 
 // ── FONCTION : CONNEXION WIFI ──────────────────────────────
 void connecterWiFi() {
-    WiFi.begin(WIFI_SSID, WIFI_PASS);              // Lance la tentative de connexion au réseau WiFi
-    while (WiFi.status() != WL_CONNECTED) delay(500); // Attend 500 ms entre chaque vérification de connexion
+    WiFi.begin(WIFI_SSID, WIFI_PASS);              
+    while (WiFi.status() != WL_CONNECTED) delay(500); 
     Serial.println("WiFi OK : " + WiFi.localIP().toString()); // Affiche l'adresse IP obtenue dans le moniteur série
 }
 
@@ -105,25 +105,25 @@ void setup() {
     Serial.begin(115200);                          
     Wire.begin(21, 22);                            
     if (!capteur.begin()) {                        
-        Serial.println("ADXL345 non detecte !");   // Si échec : affiche une erreur dans le moniteur série
+        Serial.println("ADXL345 non detecte !");   
         while(1);                                  // Bloque le programme (boucle infinie) — impossible de continuer
     }
-    capteur.setRange(ADXL345_RANGE_4_G);           // Configure la plage de mesure à ±4g (équilibre précision/portée)
+    capteur.setRange(ADXL345_RANGE_4_G);           
     connecterWiFi();                               
     wifiClient.setCACert(CA_CERT);                 
     mqtt.setServer(MQTT_HOST, MQTT_PORT);          
-    mqtt.setBufferSize(768);                       // Augmente le buffer MQTT à 768 octets (payload JSON + HMAC)
-    connecterMQTT();                               // Établit la connexion MQTT/TLS avec le broker
+    mqtt.setBufferSize(768);                       
+    connecterMQTT();                            
 }
 
 // ── LOOP : TOURNE EN CONTINU APRÈS SETUP ──────────────────
 void loop() {
-    if (WiFi.status() != WL_CONNECTED) connecterWiFi(); // Reconnecte le WiFi si la connexion a été perdue
-    if (!mqtt.connected()) connecterMQTT();        // Reconnecte le broker MQTT si la connexion a été perdue
+    if (WiFi.status() != WL_CONNECTED) connecterWiFi(); 
+    if (!mqtt.connected()) connecterMQTT();        
     mqtt.loop();                                   // Traite les messages entrants et maintient la connexion MQTT
     float ax, ay, az;                             // Déclare les variables pour stocker les derniers axes lus
-    float r = rms(ax, ay, az);                    // Mesure le RMS sur 100 échantillons (500 ms de mesure)
-    String json = "{\"rms\":"  + String(r, 4)     // Construit le JSON avec le RMS (4 décimales)
+    float r = rms(ax, ay, az);                    
+    String json = "{\"rms\":"  + String(r, 4)     
                 + ",\"x\":"   + String(ax, 3)     
                 + ",\"y\":"   + String(ay, 3)     
                 + ",\"z\":"   + String(az, 3)     
