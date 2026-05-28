@@ -1,27 +1,27 @@
 <?php
-session_start();                               // Démarre ou reprend la session PHP pour accéder aux données de connexion
-if (!isset($_SESSION['user'])) {               // Si l'utilisateur n'est PAS connecté (pas de session active)
-    header('Location: login.php'); exit;       // Redirige vers la page de connexion — protège la page contre les accès non autorisés
+session_start();                               
+if (!isset($_SESSION['user'])) {               
+    header('Location: login.php'); exit;       
 }
-require_once 'db.php';                         // Charge le fichier de connexion MySQL (fonction getDB())
-$derniere = getDB()                            // Récupère la dernière mesure enregistrée (la plus récente)
-    ->query('SELECT * FROM measures ORDER BY id_measure DESC LIMIT 1') // Trie par ID décroissant, prend seulement la 1ère ligne
-    ->fetch();                                 // Retourne un tableau associatif ou false si la table est vide
+require_once 'db.php';                         
+$derniere = getDB()                            
+    ->query('SELECT * FROM measures ORDER BY id_measure DESC LIMIT 1') 
+    ->fetch();                                 
 $mesures  = getDB()                            // Récupère les 20 dernières mesures pour le tableau historique
     ->query('SELECT * FROM measures ORDER BY id_measure DESC LIMIT 20') // Trie du plus récent au plus ancien, limite à 20 lignes
     ->fetchAll();                              // Retourne un tableau de tableaux associatifs (toutes les lignes)
 ?>
-<!DOCTYPE html>                                <!-- Déclare le type de document HTML5 -->
-<html lang="fr">                               <!-- Langue française -->
+<!DOCTYPE html>                                
+<html lang="fr">                              
 <head>
     <meta charset="UTF-8">                     <!-- Encodage UTF-8 pour les accents et caractères spéciaux -->
     <meta http-equiv="refresh" content="5">    <!-- IMPORTANT : recharge automatiquement la page toutes les 5 secondes (sans JavaScript) -->
     <title>Dashboard</title>                   <!-- Titre affiché dans l'onglet du navigateur -->
     <link rel="stylesheet" href="style.css">   <!-- Charge la feuille de style partagée avec login.php -->
 </head>
-<body>                                         <!-- Corps de la page HTML -->
-<div class="header">                           <!-- Barre de navigation en haut : titre à gauche, nom+déconnexion à droite (flexbox CSS) -->
-    <h1>Sonde de vibration – ArcelorMittal</h1><!-- Titre principal de l'application -->
+<body>                                         
+<div class="header">                        
+    <h1>Sonde de vibration – ArcelorMittal</h1>
     <div>Connecte : <strong><?= $_SESSION['user'] ?></strong>  <!-- Affiche le nom de l'utilisateur connecté depuis la session -->
     | <a href="logout.php" class="logout">Deconnexion</a></div><!-- Lien vers logout.php qui détruit la session -->
 </div>                                         <!-- Fin de la barre de navigation -->
@@ -63,12 +63,12 @@ $mesures  = getDB()                            // Récupère les 20 dernières m
             <td><?= $m['threshold_exceeded']                               <!-- Vérifie si le seuil était dépassé lors de cette mesure -->
                 ? '<span class="badge-alerte">Alerte</span>'               <!-- Badge rouge si seuil dépassé (threshold_exceeded = 1) -->
                 : '<span class="badge-ok">Normal</span>' ?></td>           <!-- Badge vert si normal (threshold_exceeded = 0) -->
-        </tr>                                  <!-- Fin de la ligne de mesure -->
+        </tr>                                  
     <?php endforeach; ?>                       <!-- Fin de la boucle foreach sur les mesures -->
-    <?php if (empty($mesures)): ?>             <!-- Si le tableau $mesures est vide (aucune donnée en base) -->
+    <?php if (empty($mesures)): ?>             
         <tr><td colspan="7" style="text-align:center;color:gray;padding:20px">Aucune donnee</td></tr> <!-- Ligne unique sur toute la largeur avec message -->
-    <?php endif; ?>                            <!-- Fin du bloc conditionnel "aucune donnée" -->
-    </tbody>                                   <!-- Fin du corps du tableau -->
-</table>                                       <!-- Fin du tableau HTML -->
-</body>                                        <!-- Fin du corps de la page -->
-</html>                                        <!-- Fin du document HTML -->
+    <?php endif; ?>                            
+    </tbody>                                   
+</table>                                       
+</body>                                        
+</html>                                        
