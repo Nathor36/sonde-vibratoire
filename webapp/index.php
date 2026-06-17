@@ -38,7 +38,7 @@ $mesures  = getDB()                            // Récupère les 20 dernières m
     <p style="color:gray"><?= $derniere ? 'Derniere mesure : ' . $derniere['date_measure'] : 'En attente de donnees...' ?></p> <!-- Affiche l'horodatage de la dernière mesure ou un message d'attente -->
 </div>                                         <!-- Fin du bloc rms-live -->
 
-<h2 style="margin-bottom:10px">20 dernieres mesures</h2> <!-- Titre de la section tableau historique -->
+<h2 style="margin-bottom:10px">20 dernieres mesures</h2> 
 <table>                                        
     <thead>                                    
         <tr>                                   
@@ -51,18 +51,18 @@ $mesures  = getDB()                            // Récupère les 20 dernières m
             <th>Etat</th>                      
         </tr>
     </thead>                                   
-    <tbody>                                    <!-- Corps du tableau : contient les lignes de données -->
-    <?php foreach ($mesures as $m): ?>         <!-- Boucle sur chacune des 20 mesures récupérées en base -->
-        <tr>                                   <!-- Une ligne par mesure -->
-            <td><?= $m['id_measure'] ?></td>   <!-- Affiche l'ID unique de la mesure (clé primaire AUTO_INCREMENT) -->
-            <td><?= $m['date_measure'] ?></td> <!-- Affiche l'horodatage au format YYYY-MM-DD HH:MM:SS -->
+    <tbody>                                    
+    <?php foreach ($mesures as $m): ?>         
+        <tr>                                   
+            <td><?= $m['id_measure'] ?></td>   
+            <td><?= $m['date_measure'] ?></td>
             <td><strong><?= number_format($m['rms'], 4) ?></strong></td> 
             <td><?= number_format($m['axis_x'], 3) ?></td>                 
             <td><?= number_format($m['axis_y'], 3) ?></td>                 
             <td><?= number_format($m['axis_z'], 3) ?></td>                 
             <td><?= $m['threshold_exceeded']                               
                 ? '<span class="badge-alerte">Alerte</span>'               
-                : '<span class="badge-ok">Normal</span>' ?></td>           <!-- Badge vert si normal (threshold_exceeded = 0) -->
+                : '<span class="badge-ok">Normal</span>' ?></td>           
         </tr>                                  
     <?php endforeach; ?>                       
     <?php if (empty($mesures)): ?>             
