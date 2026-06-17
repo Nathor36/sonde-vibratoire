@@ -15,7 +15,7 @@ $mesures  = getDB()                            // Récupère les 20 dernières m
 <html lang="fr">                              
 <head>
     <meta charset="UTF-8">                     
-    <meta http-equiv="refresh" content="5">    <!-- IMPORTANT : recharge automatiquement la page toutes les 5 secondes (sans JavaScript) -->
+    <meta http-equiv="refresh" content="5">    
     <title>Dashboard</title>                   <!-- Titre affiché dans l'onglet du navigateur -->
     <link rel="stylesheet" href="style.css">   <!-- Charge la feuille de style partagée avec login.php -->
 </head>
