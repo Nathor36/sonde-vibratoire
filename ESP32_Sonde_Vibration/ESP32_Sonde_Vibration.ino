@@ -106,7 +106,7 @@ void setup() {
     Wire.begin(21, 22);                            
     if (!capteur.begin()) {                        
         Serial.println("ADXL345 non detecte !");   
-        while(1);                                  // Bloque le programme (boucle infinie) — impossible de continuer
+        while(1);                                 
     }
     capteur.setRange(ADXL345_RANGE_4_G);           
     connecterWiFi();                               
