@@ -14,7 +14,7 @@ $mesures  = getDB()                            // Récupère les 20 dernières m
 <!DOCTYPE html>                                
 <html lang="fr">                              
 <head>
-    <meta charset="UTF-8">                     <!-- Encodage UTF-8 pour les accents et caractères spéciaux -->
+    <meta charset="UTF-8">                     
     <meta http-equiv="refresh" content="5">    <!-- IMPORTANT : recharge automatiquement la page toutes les 5 secondes (sans JavaScript) -->
     <title>Dashboard</title>                   <!-- Titre affiché dans l'onglet du navigateur -->
     <link rel="stylesheet" href="style.css">   <!-- Charge la feuille de style partagée avec login.php -->
@@ -39,34 +39,34 @@ $mesures  = getDB()                            // Récupère les 20 dernières m
 </div>                                         <!-- Fin du bloc rms-live -->
 
 <h2 style="margin-bottom:10px">20 dernieres mesures</h2> <!-- Titre de la section tableau historique -->
-<table>                                        <!-- Tableau HTML qui affiche l'historique des mesures -->
-    <thead>                                    <!-- En-tête du tableau (non répété lors du défilement) -->
-        <tr>                                   <!-- Ligne d'en-tête -->
-            <th>#</th>                         <!-- Colonne : identifiant unique de la mesure en base -->
-            <th>Date / Heure</th>              <!-- Colonne : horodatage automatique enregistré par MySQL -->
-            <th>RMS (g)</th>                   <!-- Colonne : valeur RMS globale des 3 axes en g -->
-            <th>Axe X</th>                     <!-- Colonne : accélération sur l'axe X en g -->
-            <th>Axe Y</th>                     <!-- Colonne : accélération sur l'axe Y en g -->
-            <th>Axe Z</th>                     <!-- Colonne : accélération sur l'axe Z en g (≈1g au repos) -->
-            <th>Etat</th>                      <!-- Colonne : badge "Normal" ou "Alerte" selon threshold_exceeded -->
+<table>                                        
+    <thead>                                    
+        <tr>                                   
+            <th>#</th>                         
+            <th>Date / Heure</th>              
+            <th>RMS (g)</th>                   
+            <th>Axe X</th>                     
+            <th>Axe Y</th>                     
+            <th>Axe Z</th>                     
+            <th>Etat</th>                      
         </tr>
-    </thead>                                   <!-- Fin de l'en-tête du tableau -->
+    </thead>                                   
     <tbody>                                    <!-- Corps du tableau : contient les lignes de données -->
     <?php foreach ($mesures as $m): ?>         <!-- Boucle sur chacune des 20 mesures récupérées en base -->
         <tr>                                   <!-- Une ligne par mesure -->
             <td><?= $m['id_measure'] ?></td>   <!-- Affiche l'ID unique de la mesure (clé primaire AUTO_INCREMENT) -->
             <td><?= $m['date_measure'] ?></td> <!-- Affiche l'horodatage au format YYYY-MM-DD HH:MM:SS -->
-            <td><strong><?= number_format($m['rms'], 4) ?></strong></td>   <!-- RMS en gras avec 4 décimales (ex: 0.9821) -->
-            <td><?= number_format($m['axis_x'], 3) ?></td>                 <!-- Axe X avec 3 décimales -->
-            <td><?= number_format($m['axis_y'], 3) ?></td>                 <!-- Axe Y avec 3 décimales -->
-            <td><?= number_format($m['axis_z'], 3) ?></td>                 <!-- Axe Z avec 3 décimales -->
-            <td><?= $m['threshold_exceeded']                               <!-- Vérifie si le seuil était dépassé lors de cette mesure -->
-                ? '<span class="badge-alerte">Alerte</span>'               <!-- Badge rouge si seuil dépassé (threshold_exceeded = 1) -->
+            <td><strong><?= number_format($m['rms'], 4) ?></strong></td> 
+            <td><?= number_format($m['axis_x'], 3) ?></td>                 
+            <td><?= number_format($m['axis_y'], 3) ?></td>                 
+            <td><?= number_format($m['axis_z'], 3) ?></td>                 
+            <td><?= $m['threshold_exceeded']                               
+                ? '<span class="badge-alerte">Alerte</span>'               
                 : '<span class="badge-ok">Normal</span>' ?></td>           <!-- Badge vert si normal (threshold_exceeded = 0) -->
         </tr>                                  
-    <?php endforeach; ?>                       <!-- Fin de la boucle foreach sur les mesures -->
+    <?php endforeach; ?>                       
     <?php if (empty($mesures)): ?>             
-        <tr><td colspan="7" style="text-align:center;color:gray;padding:20px">Aucune donnee</td></tr> <!-- Ligne unique sur toute la largeur avec message -->
+        <tr><td colspan="7" style="text-align:center;color:gray;padding:20px">Aucune donnee</td></tr> 
     <?php endif; ?>                            
     </tbody>                                   
 </table>                                       
